@@ -7,3 +7,6 @@ Will be ignored for commit from directory terraform:
 - all sub dirs .terraform and it contents
 
 One more line for 2.2 after creating branch fix
+
+
+Changes via IDE PyCharm
