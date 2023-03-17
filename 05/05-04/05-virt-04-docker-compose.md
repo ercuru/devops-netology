@@ -10,7 +10,10 @@
 
 ### Решение 1
 
-![ready image](/screens/1.jpg)
+<p align="center">
+  <img  src=".//screens/1.jpg">
+</p>
+
 
 ## Задача 2
 >
@@ -25,7 +28,11 @@
 ### Решение 2
 
 1) ВМ созданная из веб интерфейса
-![ready image](/screens/2.jpg)
+
+<p align="center">
+  <img  src="./screens/2.jpg">
+</p>
+
 2) ВМ созданная с помощью Terraform
 ```
 $ terraform apply
@@ -151,8 +158,11 @@ external_ip_address_node01_yandex_cloud = "158.160.63.116"
 internal_ip_address_node01_yandex_cloud = "192.168.101.7"
 
 ```
-Наша машина в облаке:
-![ready image](/screens/3.jpg)
+> Наша машина в облаке:
+
+<p align="center">
+  <img  src="./screens/3.jpg">
+</p>
 
 ## Задача 3
 >
@@ -211,4 +221,6 @@ d218670b88cd   prom/prometheus:v2.17.1            "/bin/prometheus --c…"   21 
 ### Решение 4
 Метрики с нашей ВМ
 
-![ready image](/screens/4.jpg)
+<p align="center">
+  <img  src="./screens/4.jpg">
+</p>
