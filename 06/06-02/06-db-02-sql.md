@@ -9,7 +9,7 @@
 
 ### Решение 1
 
-- dockerfile
+- docker file
 
 ```
 version: '3'
