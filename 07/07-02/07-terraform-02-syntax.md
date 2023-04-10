@@ -56,8 +56,8 @@ export TF_VAR_yc_cloud_id=$(yc config get cloud-id)
 - Packer - https://cloud.yandex.ru/docs/tutorials/infrastructure-management/packer-quickstart
 
 2) Ссылку на репозиторий с исходной конфигурацией Terraform
-- 
-- приведем вывод команд terraform init, plan, apply и проверим ping 
+- https://github.com/ercuru/devops-netology/tree/main/07/07-02/terraform
+- приведем вывод команд terraform init, plan, apply и проверим ping инстанса
 ```commandline
 $ terraform init
 
