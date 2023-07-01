@@ -1,0 +1,129 @@
+---
+- name: Install Clickhouse
+  hosts: clickhouse
+  become: true
+  handlers:
+    - name: Start clickhouse service
+      ansible.builtin.service:
+        name: clickhouse-server
+        state: restarted
+  tasks:
+    - block:
+        - name: Clickhouse | Get distrib
+          ansible.builtin.get_url:
+            url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.noarch.rpm"
+            dest: "./{{ item }}-{{ clickhouse_version }}.rpm"
+          with_items: "{{ clickhouse_packages }}"
+      rescue:
+        - name: Clickhouse | Get distrib
+          ansible.builtin.get_url:
+            url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+            dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
+    - name: Clickhouse | Install packages
+      ansible.builtin.yum:
+        name:
+          - clickhouse-common-static-{{ clickhouse_version }}.rpm
+          - clickhouse-client-{{ clickhouse_version }}.rpm
+          - clickhouse-server-{{ clickhouse_version }}.rpm
+      notify: Start clickhouse service
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Clickhouse | Flush handlers
+      ansible.builtin.meta: flush_handlers
+    - name: Clickhouse | Wait for server start
+      ansible.builtin.wait_for:
+        port: 9000
+        delay: 30
+    - name: Clickhouse | Create database
+      ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
+      register: create_db
+      failed_when: create_db.rc != 0 and create_db.rc !=82
+      changed_when: create_db.rc == 0
+
+- name: Install Vector
+  hosts: vector
+  become: true
+  tasks:
+    - name: Vector | Get Vector distrib
+      ansible.builtin.get_url:
+        url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-1.x86_64.rpm"
+        dest: "./vector-{{ vector_version }}-1.x86_64.rpm"
+    - name: Vector | YUM install
+      ansible.builtin.yum:
+        name: "vector-{{ vector_version }}-1.x86_64.rpm"
+        state: present
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Vector | Template config
+      ansible.builtin.template:
+        src: templates/vector.yml.j2
+        dest: /etc/vector/vector.yml
+        mode: 0644
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_gid }}"
+    - name: Vector | Template systemd unit
+      ansible.builtin.template:
+        src: templates/vector.service.yml.j2
+        dest: /etc/systemd/system/vector.service
+        mode: 0644
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_gid }}"
+    - name: Vector | Start service
+      ansible.builtin.systemd:
+        name: vector
+        state: started
+        daemon_reload: true
+      ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Install Nginx
+  hosts: lighthouse
+  become: true
+  handlers:
+    - name: Start nginx
+      command: nginx
+    - name: Reload nginx
+      command: nginx -s reload
+  tasks:
+    - name: Nginx | Install epel-release
+      yum:
+        name: epel-release
+        state: present
+    - name: Nginx | Install Nginx
+      yum:
+        name: nginx
+        state: present
+      notify: Start nginx
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Nginx | Create Nginx config
+      template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+        mode: 0644
+      notify: Reload nginx
+
+- name: Install lighthouse
+  hosts: lighthouse
+  become: true
+  handlers:
+    - name: Reload nginx
+      command: nginx -s reload
+  pre_tasks:
+    - name: Lighthouse | Install git
+      yum:
+        name: git
+        state: present
+    - name: Lighthouse | Create dir for Lighthouse
+      file:
+        path: "{{ lighthouse_location_dir }}"
+        state: directory
+  tasks:
+    - name: Lighthouse | Copy lighthouse from git
+      git:
+        repo: "{{ lighthouse_vcs }}"
+        version: master
+        dest: "{{ lighthouse_location_dir }}"
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Lighthouse | Create lighthouse config
+      template:
+        src: templates/lighthouse.conf.j2
+        dest: /etc/nginx/conf.d/default.conf
+        mode: 0644
+      notify: Reload nginx
