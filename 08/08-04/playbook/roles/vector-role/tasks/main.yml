@@ -1,0 +1,35 @@
+---
+- name: Vector | Get Vector distrib
+  become: true
+  ansible.builtin.get_url:
+    url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-1.x86_64.rpm"
+    dest: "./vector-{{ vector_version }}-1.x86_64.rpm"
+- name: Vector | YUM install
+  become: true
+  ansible.builtin.yum:
+    name: "vector-{{ vector_version }}-1.x86_64.rpm"
+    state: present
+  ignore_errors: "{{ ansible_check_mode }}"
+- name: Vector | Template config
+  ansible.builtin.template:
+    src: templates/vector.yml.j2
+    dest: /etc/vector/vector.yml
+    mode: 0644
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+- name: Vector | Template systemd unit
+  become: true
+  ansible.builtin.template:
+    src: templates/vector.service.yml.j2
+    dest: /etc/systemd/system/vector.service
+    mode: 0644
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+- name: Vector | Start service
+  become: true
+  ansible.builtin.systemd:
+    name: vector
+    state: started
+    daemon_reload: true
+  ignore_errors: "{{ ansible_check_mode }}"
+

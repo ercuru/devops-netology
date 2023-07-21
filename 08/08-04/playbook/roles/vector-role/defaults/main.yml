@@ -1,0 +1,21 @@
+---
+vector_version: 0.21.1
+vector_config:
+  sources:
+      our_log:
+        type: file
+        read_from: beginning
+        ignore_older_secs: 600
+        include:
+          - home/vagrant/logs/1.log
+  sinks:
+    to_clickhouse:
+      type: clickhouse
+      inputs:
+        - our_log
+      database: logs
+      endpoint: http://0.0.0.0:8123
+      table: access_logs
+      compression: gzip
+      healthcheck: false
+      skip_unknown_fields: true
