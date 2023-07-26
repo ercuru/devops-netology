@@ -125,7 +125,7 @@ node_filesystem_free_bytes{job="nodeexporter",mountpoint="/"} / (1024 * 1024 * 1
 >1. Сохраните ваш Dashboard. Для этого перейдите в настройки Dashboard, выберите в боковом меню «JSON MODEL». Далее скопируйте отображаемое json-содержимое в отдельный файл и сохраните его.
 >1. В качестве решения задания приведите листинг этого файла.
 
-Листинг json подготовленной dashboard [grafana_dashboard_nodeexporter.json](https://github.com/ercuru/devops-netology/blob/main/10/10-03/grafana_dashboard_nodeexporter.json)
+Листинг json подготовленной dashboard [grafana_dashboard_nodeexporter.json](https://github.com/ercuru/devops-netology/blob/main/10/10-02/grafana_dashboard_nodeexporter.json)
 ```json
 {
   "annotations": {
