@@ -1,0 +1,19 @@
+node("linux"){
+    stage("Git clone"){
+        sh '''if [ -d ./example-playbook ]; then
+          rm -rf ./example-playbook
+        fi
+        '''
+        sh 'git clone https://github.com/aragastmatb/example-playbook'
+    }
+    stage("Run playbook"){
+        if (params.prod_run){
+            sh '''cd ./example-playbook && ansible-playbook site.yml -i inventory/prod.yml
+            '''
+        }
+        else{
+            sh '''cd ./example-playbook && ansible-playbook site.yml -i inventory/prod.yml --check --diff
+            '''
+        }
+    }
+}
