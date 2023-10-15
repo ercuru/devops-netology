@@ -17,17 +17,17 @@
 ### Решение API Gateway
 
 | API Gateway | Маршрутизация запросов на основе конфигурации | Проверка аутентификационной информации в запросах | Терминация HTTPS |
-| :---                                                               | :---: | :---: |:----------------:|
-| [Apache Apisix](https://apisix.apache.org)                         |   v   |   v   |        v         |
-| [Caddy](https://caddyserver.com)                                   |   v   |   v   |        v         |
-| [Kong](https://konghq.com/products/api-gateway-platform)           |   v   |   v   |        v         |
-| [HAProxy](https://www.haproxy.com)                                 |   v   |   v   |        v         |
-| [Nginx](https://nginx.com)                                         |   v   |   v   |        v         |
-| [Ocelot](https://github.com/ThreeMammals/Ocelot)                   |   v   |   v   |        v         |
-| [Tyk](https://tyk.io)                                              |   v   |   v   |        v         |
-| [Amazon API Gateway](https://aws.amazon.com/ru/api-gateway/)       |   v   |   v   |        v         |
-| [Azure](https://azure.microsoft.com/en-gb/services/api-management) |   v   |   v   |        v         |
-| [Yandex API Gateway](https://cloud.yandex.ru/docs/api-gateway/)    |   v   |   v   |        v         |
+| :---                                                               |:---------------------------------------------:|:-------------------------------------------------:|:----------------:|
+| [Apache Apisix](https://apisix.apache.org)                         |                       +                       |                         +                         |        +         |
+| [Caddy](https://caddyserver.com)                                   |                       +                       |                         +                         |        +         |
+| [Kong](https://konghq.com/products/api-gateway-platform)           |                       +                       |                         +                         |        +         |
+| [HAProxy](https://www.haproxy.com)                                 |                       +                       |                         +                         |        +         |
+| [Nginx](https://nginx.com)                                         |                       +                       |                         +                         |        +         |
+| [Ocelot](https://github.com/ThreeMammals/Ocelot)                   |                       +                       |                         +                         |        +         |
+| [Tyk](https://tyk.io)                                              |                       +                       |                         +                         |        +         |
+| [Amazon API Gateway](https://aws.amazon.com/ru/api-gateway/)       |                       +                       |                         +                         |        +         |
+| [Azure](https://azure.microsoft.com/en-gb/services/api-management) |                       +                       |                         +                         |        +         |
+| [Yandex API Gateway](https://cloud.yandex.ru/docs/api-gateway/)    |                       +                       |                         +                         |        +         |
 
 В каждый из сервисов имеет свои преимущества и недостатки.
 Если разрабатываемая система использует в облачную инфраструктуру, то удобнее было бы воспользоваться услугами облачного провайдера для быстрого внедрения и не усложнения системы в целом (в дополнении с более большими возможностями по защите).
