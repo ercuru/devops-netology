@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+          name: nginx-http
+        - containerPort: 443
+          name: nginx-https
+      - name: multitool
+        image: wbitt/network-multitool
+        env:
+          - name: HTTP_PORT
+            value: "8080"
+          - name: HTTPS_PORT
+            value: "8443"
+        ports:
+        - containerPort: 8080
+          name: multi-http
+        - containerPort: 8443
+          name: multi-https
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-dep-12-3
+spec:
+  selector:
+    app: nginx
+  ports:
+  - name: svc-nginx-http
+    protocol: TCP
+    port: 80
+    targetPort: nginx-http
+  - name: svc-nginx-https
+    protocol: TCP
+    port: 443
+    targetPort: nginx-https
+  - name: svc-multi-http
+    protocol: TCP
+    port: 8080
+    targetPort: multi-http
+  - name: svc-multi-https
+    protocol: TCP
+    port: 8443
+    targetPort: multi-https
